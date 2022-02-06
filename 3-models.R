@@ -1,7 +1,8 @@
 ## tidymodels for options
-# library(xgboost)
+library(data.table)
+library(tidyverse)
 library(tidymodels)
-library(embed)
+
 library(vip)
 library(usemodels)
 
@@ -31,14 +32,14 @@ rf_spec <-  rand_forest(   mode = "classification", mtry = tune(), trees = 1500,
 tree_spec = decision_tree( cost_complexity = tune(), tree_depth = tune() ) %>%  set_engine("rpart") %>%   set_mode("classification")
 # cubist_spec <- cubist_rules(committees = tune(), neighbors = tune()) %>%     set_engine("Cubist") 
 
-# tickers = read.xlsx('https://onedrive.live.com/download?cid=13C9A0CA3A18CA60&resid=13C9A0CA3A18CA60%2140997&authkey=AC_TPn19sar8u4M',detectDates = T) %>% as.data.table() %>% 
-#  .[ !is.na(IV_flag), .(symbol=Symbol,actionDate,ClosePrice,ShortFloat,ShortRatio)]
+ tickers = read.xlsx('https://onedrive.live.com/download?cid=13C9A0CA3A18CA60&resid=13C9A0CA3A18CA60%2140997&authkey=AC_TPn19sar8u4M',detectDates = T) %>% as.data.table() %>% 
+  .[ !is.na(IV_flag), .(symbol=Symbol,actionDate,ClosePrice,ShortFloat,ShortRatio)]
  
 
 
 ## Load data for model IN: .keep_symbols ===============================================================
 
-data = as.data.table(computeCandles(  tickers[Symbol %in% keep_symbols ]$Symbol ) )[index>Sys.Date()-45] %>% ## only valid symbols
+data = as.data.table(computeCandles(  tickers$Symbol ) )[index>Sys.Date()-45] %>% ## only valid symbols
   select(-Open,-High,-Low,-Close,-Volume,-ma3,-fwd1,-fwd2)
   # select(index,symbol,returns,vrank,ma3_sl,size,prev_size,pos,color,openHigher,vlty5,volz,relativeSize,closedHigh,prev_ret,reversal)  
 
